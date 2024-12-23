@@ -1,16 +1,47 @@
 mod todo;
-
-use std::env;
-use std::process;
-use todo::run;
+mod task_manager;
+use task_manager::*;
+// use todo::run;
+// use todo::TaskManager;
 use todo::{Status, ToDo};
+use std::io;
 
 fn main() {
-    run();
-    // let task = ToDo::new(env::args()).unwrap_or_else(|err| {
-    //     eprintln!("Problem parsing arguments: {err}");
-    //     process::exit(1);
-    // });
+    let mut tasks = TaskManager::new();
+    run(&mut tasks);
+}
 
-    // println!("Task added : {:#?}", task);
+fn run(tasks: &mut TaskManager){
+    loop {
+        let mut init = String::new();
+        println!(
+            "Opening ToDo List
+            1 : Add task
+            2 : List task
+            3 : Delete task
+            4 : Modify task
+            5 : Quit"
+        );
+
+        io::stdin()
+            .read_line(&mut init)
+            .expect("Error reading input");
+
+        let init: usize = match init.trim().parse() {
+            Ok(num) => num,
+            Err(_) => 5,
+        };
+
+        match init {
+            1 => tasks.add_task(),
+            2 => tasks.list_task(),
+            3 => println!("Deleting tasks is not implemented yet."),
+            4 => println!("Modifying tasks is not implemented yet."),
+            5 => {
+                println!("Goodbye!");
+                break;
+            }
+            _ => println!("Invalid option, please try again."),
+        }
+    }
 }
