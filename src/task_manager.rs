@@ -16,6 +16,10 @@ impl TaskManager {
         }
     }
 
+    pub fn insert(&mut self, id: i32, task: ToDo) {
+        self.task.insert(id, task);
+    }
+
     pub fn add_task(&mut self) {
         self.next_id += 1;
 
@@ -98,5 +102,103 @@ impl TaskManager {
         } else {
             println!("Task with ID {} not found.", task_id);
         }
-    }    
+    }
+
+    pub fn modify_task(&mut self) {
+        if self.task.is_empty() {
+            println!("No tasks available to modify.");
+            return;
+        }
+
+        println!("Get ID of your task to modify :");
+        for (id, task) in &self.task {
+            println!("ID: {}, Task: {} : {}, Status : {:?}", id, task.title, task.information, task.status);
+        }
+
+        let mut task_id_input = String::new();
+        io::stdin()
+            .read_line(&mut task_id_input)
+            .expect("Failed to read input");
+    
+        let task_id = match task_id_input.trim().parse::<i32>() {
+            Ok(id) => id,
+            Err(_) => {
+                println!("Invalid ID. Please enter a valid number.");
+                return;
+            }
+        };
+
+        println!("
+        1 : Modify title
+        2 : Modify information
+        3 : Modify status
+        ");
+
+        let mut field_input = String::new();
+        io::stdin()
+            .read_line(&mut field_input)
+            .expect("Invalid number");
+
+        let mut field = match field_input.trim().parse::<i32>() {
+            Ok(int) => int,
+            Err(_) => {
+                println!("Invalid field. Please enter a valid number.");
+                return;
+            }
+        };
+
+        let modify = match field {
+            1 => {
+                if let Some(x) = self.task.get_mut(&task_id) {
+                    x.title = Self::change_information();        
+                }                
+            }
+            2 => {
+                if let Some(x) = self.task.get_mut(&task_id) {
+                    x.information = Self::change_information();        
+                }                
+            }
+            3 => {
+                if let Some(x) = self.task.get_mut(&task_id) {
+                    x.status = Self::get_status();      
+                }                
+            }
+            _ => {}
+        };
+
+    }
+
+    fn get_status() -> Status {
+        let mut new_status = String::new();
+        println!(
+            "Select the Status:
+            1: To Do
+            2: In Progress
+            3: Done"
+        );
+
+        io::stdin()
+            .read_line(&mut new_status)
+            .expect("Invalid value");
+
+        match new_status.trim().parse::<usize> (){
+            Ok(1) => Status::ToDo,
+            Ok(2) => Status::InProgress,
+            Ok(3) => Status::Done,
+            _ => {
+                println!("Invalid status, defaulting to 'To Do'");
+                Status::ToDo
+            }
+        }    
+    }
+
+    fn change_information() -> String {
+        println!("Choose your new text");
+
+        let mut new_data = String::new();
+        io::stdin()
+            .read_line(&mut new_data)
+            .expect("Invalid value");
+        new_data.trim().to_string()
+    }
 }

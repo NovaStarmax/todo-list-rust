@@ -8,6 +8,11 @@ use std::io;
 
 fn main() {
     let mut tasks = TaskManager::new();
+    tasks.insert(100, ToDo {
+        title: "ma tache".to_string(),
+        information: "mon information".to_string(),
+        status: Status::ToDo,
+    });
     run(&mut tasks);
 }
 
@@ -36,7 +41,7 @@ fn run(tasks: &mut TaskManager){
             1 => tasks.add_task(),
             2 => tasks.list_task(),
             3 => tasks.delete_task(),
-            4 => println!("Modifying tasks is not implemented yet."),
+            4 => tasks.modify_task(),
             5 => {
                 println!("Goodbye!");
                 break;
