@@ -69,21 +69,34 @@ impl TaskManager {
             }
         }
     }
-    pub fn delete_task(&self) {
+    pub fn delete_task(&mut self) {
         if self.task.is_empty() {
-            println!("No tasks avaible to delete.");
-        } else {
-            println!("Get ID of your task to delete");
-            for (id, task) in &self.task {
-                print!("ID: {}, Task: {:?}", id, task.title)
-            }
+            println!("No tasks available to delete.");
+            return;
         }
-        let mut task_id = String::new();
+    
+        println!("Get ID of your task to delete:");
+        for (id, task) in &self.task {
+            println!("ID: {}, Task: {}", id, task.title);
+        }
+    
+        let mut task_id_input = String::new();
         io::stdin()
-            .read_line(&mut task_id)
-            .expect("Error reading status");
-
-        task_id.trim().parse::<i32>.unwrap();
-        self.task.remove(task_id);
-    }
+            .read_line(&mut task_id_input)
+            .expect("Failed to read input");
+    
+        let task_id = match task_id_input.trim().parse::<i32>() {
+            Ok(id) => id,
+            Err(_) => {
+                println!("Invalid ID. Please enter a valid number.");
+                return;
+            }
+        };
+    
+        if self.task.remove(&task_id).is_some() {
+            println!("Task with ID {} has been deleted.", task_id);
+        } else {
+            println!("Task with ID {} not found.", task_id);
+        }
+    }    
 }

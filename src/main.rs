@@ -35,7 +35,7 @@ fn run(tasks: &mut TaskManager){
         match init {
             1 => tasks.add_task(),
             2 => tasks.list_task(),
-            3 => println!("Deleting tasks is not implemented yet."),
+            3 => tasks.delete_task(),
             4 => println!("Modifying tasks is not implemented yet."),
             5 => {
                 println!("Goodbye!");
