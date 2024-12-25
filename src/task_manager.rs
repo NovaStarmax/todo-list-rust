@@ -1,7 +1,6 @@
-use crate::Status;
+use crate::input::{int_intput, status_input, string_input};
 use crate::ToDo;
 use std::collections::HashMap;
-use std::io;
 
 pub struct TaskManager {
     pub task: HashMap<i32, ToDo>,
@@ -24,16 +23,10 @@ impl TaskManager {
         self.next_id += 1;
 
         println!("What is your task?");
-        let mut title = String::new();
-        io::stdin()
-            .read_line(&mut title)
-            .expect("Error reading title");
+        let title = string_input();
 
         println!("Give specific information:");
-        let mut information = String::new();
-        io::stdin()
-            .read_line(&mut information)
-            .expect("Error reading information");
+        let information = string_input();
 
         println!(
             "Select the Status:
@@ -41,21 +34,7 @@ impl TaskManager {
             2: In Progress
             3: Done"
         );
-
-        let mut status_input = String::new();
-        io::stdin()
-            .read_line(&mut status_input)
-            .expect("Error reading status");
-
-        let status = match status_input.trim().parse::<usize>() {
-            Ok(1) => Status::ToDo,
-            Ok(2) => Status::InProgress,
-            Ok(3) => Status::Done,
-            _ => {
-                println!("Invalid status, defaulting to 'To Do'");
-                Status::ToDo
-            }
-        };
+        let status = status_input();
 
         self.task.insert(
             self.next_id,
@@ -86,19 +65,7 @@ impl TaskManager {
         for (id, task) in &self.task {
             println!("ID: {}, Task: {}", id, task.title);
         }
-
-        let mut task_id_input = String::new();
-        io::stdin()
-            .read_line(&mut task_id_input)
-            .expect("Failed to read input");
-
-        let task_id = match task_id_input.trim().parse::<i32>() {
-            Ok(id) => id,
-            Err(_) => {
-                println!("Invalid ID. Please enter a valid number.");
-                return;
-            }
-        };
+        let task_id = int_intput();
 
         if self.task.remove(&task_id).is_some() {
             println!("Task with ID {} has been deleted.", task_id);
@@ -120,19 +87,7 @@ impl TaskManager {
                 id, task.title, task.information, task.status
             );
         }
-
-        let mut task_id_input = String::new();
-        io::stdin()
-            .read_line(&mut task_id_input)
-            .expect("Failed to read input");
-
-        let task_id = match task_id_input.trim().parse::<i32>() {
-            Ok(id) => id,
-            Err(_) => {
-                println!("Invalid ID. Please enter a valid number.");
-                return;
-            }
-        };
+        let task_id = int_intput();
 
         println!(
             "
@@ -141,85 +96,32 @@ impl TaskManager {
         3 : Modify status
         "
         );
-
-        let mut field_input = String::new();
-        io::stdin()
-            .read_line(&mut field_input)
-            .expect("Invalid number");
-
-        let mut field = match field_input.trim().parse::<i32>() {
-            Ok(int) => int,
-            Err(_) => {
-                println!("Invalid field. Please enter a valid number.");
-                return;
-            }
-        };
-
-        let modify = match field {
+        let field = int_intput();
+        match field {
             1 => {
                 if let Some(x) = self.task.get_mut(&task_id) {
-                    x.title = Self::string_input();
+                    println!("New title");
+                    x.title = string_input();
                 }
             }
             2 => {
                 if let Some(x) = self.task.get_mut(&task_id) {
-                    x.information = Self::string_input();
+                    println!("New information");
+                    x.information = string_input();
                 }
             }
             3 => {
                 if let Some(x) = self.task.get_mut(&task_id) {
-                    x.status = Self::get_status();
+                    println!(
+                        "Select the Status:
+                        1: To Do
+                        2: In Progress
+                        3: Done"
+                    );
+                    x.status = status_input();
                 }
             }
             _ => {}
         };
-    }
-
-    fn get_status() -> Status {
-        let mut new_status = String::new();
-        println!(
-            "Select the Status:
-            1: To Do
-            2: In Progress
-            3: Done"
-        );
-
-        io::stdin()
-            .read_line(&mut new_status)
-            .expect("Invalid value");
-
-        match new_status.trim().parse::<usize>() {
-            Ok(1) => Status::ToDo,
-            Ok(2) => Status::InProgress,
-            Ok(3) => Status::Done,
-            _ => {
-                println!("Invalid status, defaulting to 'To Do'");
-                Status::ToDo
-            }
-        }
-    }
-
-    fn string_input() -> String {
-        println!("Choose your new text");
-
-        let mut new_string = String::new();
-        io::stdin()
-            .read_line(&mut new_string)
-            .expect("Invalid value");
-        new_string.trim().to_string()
-    }
-
-    fn int_intput() -> i32 {
-        loop {
-            println!("Choose your new number");
-
-            let mut new_int = String::new();
-            io::stdin().read_line(&mut new_int).expect("Invalid number");
-            let new_int: i32 = match new_int.trim().parse() {
-                Ok(num) => num,
-                Err(_) => continue,
-            };
-            return new_int;
-        }
     }
 }

@@ -1,24 +1,25 @@
-mod todo;
+mod input;
 mod task_manager;
+mod todo;
+use crate::input::int_intput;
 use task_manager::*;
-// use todo::run;
-// use todo::TaskManager;
 use todo::{Status, ToDo};
-use std::io;
 
 fn main() {
     let mut tasks = TaskManager::new();
-    tasks.insert(100, ToDo {
-        title: "ma tache".to_string(),
-        information: "mon information".to_string(),
-        status: Status::ToDo,
-    });
+    tasks.insert(
+        10,
+        ToDo {
+            title: "Ma tache".to_string(),
+            information: "Mon information".to_string(),
+            status: Status::ToDo,
+        },
+    );
     run(&mut tasks);
 }
 
-fn run(tasks: &mut TaskManager){
+fn run(tasks: &mut TaskManager) {
     loop {
-        let mut init = String::new();
         println!(
             "Opening ToDo List
             1 : Add task
@@ -27,16 +28,7 @@ fn run(tasks: &mut TaskManager){
             4 : Modify task
             5 : Quit"
         );
-
-        io::stdin()
-            .read_line(&mut init)
-            .expect("Error reading input");
-
-        let init: usize = match init.trim().parse() {
-            Ok(num) => num,
-            Err(_) => 5,
-        };
-
+        let init = int_intput();
         match init {
             1 => tasks.add_task(),
             2 => tasks.list_task(),
