@@ -1,5 +1,5 @@
-use crate::ToDo;
 use crate::Status;
+use crate::ToDo;
 use std::collections::HashMap;
 use std::io;
 
@@ -12,7 +12,7 @@ impl TaskManager {
     pub fn new() -> Self {
         Self {
             task: HashMap::new(),
-            next_id: 0,    
+            next_id: 0,
         }
     }
 
@@ -57,11 +57,14 @@ impl TaskManager {
             }
         };
 
-        self.task.insert(self.next_id, ToDo {
-            title: title.trim().to_string(),
-            information: information.trim().to_string(),
-            status,
-        });
+        self.task.insert(
+            self.next_id,
+            ToDo {
+                title: title.trim().to_string(),
+                information: information.trim().to_string(),
+                status,
+            },
+        );
         println!("Hash : {:?}", self.task);
     }
     pub fn list_task(&self) {
@@ -78,17 +81,17 @@ impl TaskManager {
             println!("No tasks available to delete.");
             return;
         }
-    
+
         println!("Get ID of your task to delete:");
         for (id, task) in &self.task {
             println!("ID: {}, Task: {}", id, task.title);
         }
-    
+
         let mut task_id_input = String::new();
         io::stdin()
             .read_line(&mut task_id_input)
             .expect("Failed to read input");
-    
+
         let task_id = match task_id_input.trim().parse::<i32>() {
             Ok(id) => id,
             Err(_) => {
@@ -96,7 +99,7 @@ impl TaskManager {
                 return;
             }
         };
-    
+
         if self.task.remove(&task_id).is_some() {
             println!("Task with ID {} has been deleted.", task_id);
         } else {
@@ -112,14 +115,17 @@ impl TaskManager {
 
         println!("Get ID of your task to modify :");
         for (id, task) in &self.task {
-            println!("ID: {}, Task: {} : {}, Status : {:?}", id, task.title, task.information, task.status);
+            println!(
+                "ID: {}, Task: {} : {}, Status : {:?}",
+                id, task.title, task.information, task.status
+            );
         }
 
         let mut task_id_input = String::new();
         io::stdin()
             .read_line(&mut task_id_input)
             .expect("Failed to read input");
-    
+
         let task_id = match task_id_input.trim().parse::<i32>() {
             Ok(id) => id,
             Err(_) => {
@@ -128,11 +134,13 @@ impl TaskManager {
             }
         };
 
-        println!("
+        println!(
+            "
         1 : Modify title
         2 : Modify information
         3 : Modify status
-        ");
+        "
+        );
 
         let mut field_input = String::new();
         io::stdin()
@@ -150,22 +158,21 @@ impl TaskManager {
         let modify = match field {
             1 => {
                 if let Some(x) = self.task.get_mut(&task_id) {
-                    x.title = Self::change_information();        
-                }                
+                    x.title = Self::string_input();
+                }
             }
             2 => {
                 if let Some(x) = self.task.get_mut(&task_id) {
-                    x.information = Self::change_information();        
-                }                
+                    x.information = Self::string_input();
+                }
             }
             3 => {
                 if let Some(x) = self.task.get_mut(&task_id) {
-                    x.status = Self::get_status();      
-                }                
+                    x.status = Self::get_status();
+                }
             }
             _ => {}
         };
-
     }
 
     fn get_status() -> Status {
@@ -181,7 +188,7 @@ impl TaskManager {
             .read_line(&mut new_status)
             .expect("Invalid value");
 
-        match new_status.trim().parse::<usize> (){
+        match new_status.trim().parse::<usize>() {
             Ok(1) => Status::ToDo,
             Ok(2) => Status::InProgress,
             Ok(3) => Status::Done,
@@ -189,16 +196,30 @@ impl TaskManager {
                 println!("Invalid status, defaulting to 'To Do'");
                 Status::ToDo
             }
-        }    
+        }
     }
 
-    fn change_information() -> String {
+    fn string_input() -> String {
         println!("Choose your new text");
 
-        let mut new_data = String::new();
+        let mut new_string = String::new();
         io::stdin()
-            .read_line(&mut new_data)
+            .read_line(&mut new_string)
             .expect("Invalid value");
-        new_data.trim().to_string()
+        new_string.trim().to_string()
+    }
+
+    fn int_intput() -> i32 {
+        loop {
+            println!("Choose your new number");
+
+            let mut new_int = String::new();
+            io::stdin().read_line(&mut new_int).expect("Invalid number");
+            let new_int: i32 = match new_int.trim().parse() {
+                Ok(num) => num,
+                Err(_) => continue,
+            };
+            return new_int;
+        }
     }
 }
