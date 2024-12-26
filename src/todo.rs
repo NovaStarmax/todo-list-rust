@@ -6,7 +6,6 @@ pub struct ToDo {
     pub information: String,
     pub status: Status,
 }
-
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub enum Status {
     ToDo,
