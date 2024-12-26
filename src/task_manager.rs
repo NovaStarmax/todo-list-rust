@@ -1,4 +1,4 @@
-use crate::input::{int_intput, status_input, string_input};
+use crate::input::{int_input, status_input, string_input};
 use crate::ToDo;
 use std::collections::HashMap;
 
@@ -65,7 +65,7 @@ impl TaskManager {
         for (id, task) in &self.task {
             println!("ID: {}, Task: {}", id, task.title);
         }
-        let task_id = int_intput();
+        let task_id = int_input();
 
         if self.task.remove(&task_id).is_some() {
             println!("Task with ID {} has been deleted.", task_id);
@@ -87,7 +87,7 @@ impl TaskManager {
                 id, task.title, task.information, task.status
             );
         }
-        let task_id = int_intput();
+        let task_id = int_input();
 
         println!(
             "
@@ -96,7 +96,7 @@ impl TaskManager {
         3 : Modify status
         "
         );
-        let field = int_intput();
+        let field = int_input();
         match field {
             1 => {
                 if let Some(x) = self.task.get_mut(&task_id) {

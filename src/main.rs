@@ -1,7 +1,8 @@
 mod input;
 mod task_manager;
 mod todo;
-use crate::input::int_intput;
+mod json_manager;
+use crate::input::int_input;
 use task_manager::*;
 use todo::{Status, ToDo};
 
@@ -28,12 +29,14 @@ fn run(tasks: &mut TaskManager) {
             4 : Modify task
             5 : Quit"
         );
-        let init = int_intput();
+        let init = int_input();
         match init {
             1 => tasks.add_task(),
             2 => tasks.list_task(),
             3 => tasks.delete_task(),
             4 => tasks.modify_task(),
+            // 6 => tasks.download(), // Écrire les taches dans le fichier json 
+            // 7 => tasks.upload(), // Importer les taches du fichier json dans l’instance de tasks
             5 => {
                 println!("Goodbye!");
                 break;

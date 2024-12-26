@@ -9,7 +9,7 @@ pub fn string_input() -> String {
     new_string.trim().to_string()
 }
 
-pub fn int_intput() -> i32 {
+pub fn int_input() -> i32 {
     loop {
         let mut new_int = String::new();
         io::stdin().read_line(&mut new_int).expect("Invalid number");
@@ -22,7 +22,7 @@ pub fn int_intput() -> i32 {
 }
 
 pub fn status_input() -> Status {
-    let input = int_intput();
+    let input = int_input();
     match input {
         1 => Status::ToDo,
         2 => Status::InProgress,
