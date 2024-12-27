@@ -1,6 +1,7 @@
-use crate::input::{int_input, status_input, string_input};
+use crate::input::{int_input, status_input, string_input, create_todo};
 use crate::ToDo;
 use std::collections::HashMap;
+use std::fs;
 
 pub struct TaskManager {
     pub task: HashMap<i32, ToDo>,
@@ -19,33 +20,28 @@ impl TaskManager {
         self.task.insert(id, task);
     }
 
+    // Ce posser la question si on ajoute les id dans le json car c’est plus simple pour la suite 
+
+    pub fn load_from_file(&mut self, path: &str){
+        let data = fs::read_to_string(path).expect("Unable to read file");
+        let data_vec: Vec<ToDo> = serde_json::from_str(&data).expect("Failed to deserialize tasks");
+        for task in data_vec {
+            self.task.insert(self.next_id, task);
+            self.next_id += 1;
+        }
+    }
+
     pub fn add_task(&mut self) {
         self.next_id += 1;
 
-        println!("What is your task ?");
-        let title = string_input();
-
-        println!("Give specific information:");
-        let information = string_input();
-
-        println!(
-            "Select the Status:
-            1: To Do
-            2: In Progress
-            3: Done"
-        );
-        let status = status_input();
-
+        let task = create_todo();
         self.task.insert(
             self.next_id,
-            ToDo {
-                title: title.trim().to_string(),
-                information: information.trim().to_string(),
-                status,
-            },
+            task,
         );
         println!("Hash : {:?}", self.task);
     }
+
     pub fn list_task(&self) {
         if self.task.is_empty() {
             println!("No tasks available.");

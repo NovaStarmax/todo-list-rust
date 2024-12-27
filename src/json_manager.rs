@@ -34,24 +34,6 @@ mod tests {
         assert_eq!(antoine, antoine_bis);
     }
 
-    // const JSON: &str = r#"
-    // {
-    //     "title": "Antoine",
-    //     "information": "Gobbe",
-    //     "status": "Done"
-    // }
-    // "#;
-    // #[test]
-    // fn test_json() {
-    //     let res = from_str::<ToDo>(JSON);
-    //     println!("{:?}", res);
-    // }
-
-    // #[test]
-    // fn is_err() {
-    //     let err = 1;
-    //     assert_eq!(err, 2);
-    // }
     #[test]
     fn is_valid() {
         let path = "task_folder/tasks.json";
@@ -59,8 +41,5 @@ mod tests {
         println!("{:?}", tasks);
         assert_eq!(tasks.len(), 4);
         assert_eq!(tasks[0].title, "Acheter du pain");
-        // assert_eq!(tasks[0].status, Status::ToDo);
-        // assert_eq!(tasks[1].title, "Task 2");
-        // assert_eq!(tasks[1].status, Status::InProgress);
     }
 }
