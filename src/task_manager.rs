@@ -22,7 +22,7 @@ impl TaskManager {
     pub fn add_task(&mut self) {
         self.next_id += 1;
 
-        println!("What is your task?");
+        println!("What is your task ?");
         let title = string_input();
 
         println!("Give specific information:");

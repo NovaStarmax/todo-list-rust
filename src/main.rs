@@ -22,26 +22,25 @@ fn main() {
 fn run(tasks: &mut TaskManager) {
     loop {
         println!(
-            "Opening ToDo List
-            1 : Add task
-            2 : List task
-            3 : Delete task
-            4 : Modify task
-            5 : Quit"
+            "Menu:
+            1. Add task
+            2. List tasks
+            3. Delete task
+            4. Modify task
+            5. Save tasks to JSON
+            6. Load tasks from JSON
+            7. Quit"
         );
-        let init = int_input();
-        match init {
+        let choice = int_input();
+        match choice {
             1 => tasks.add_task(),
             2 => tasks.list_task(),
             3 => tasks.delete_task(),
             4 => tasks.modify_task(),
-            // 6 => tasks.download(), // Écrire les taches dans le fichier json 
-            // 7 => tasks.upload(), // Importer les taches du fichier json dans l’instance de tasks
-            5 => {
-                println!("Goodbye!");
-                break;
-            }
-            _ => println!("Invalid option, please try again."),
+            // 5 => json_manager::save_to_file(&tasks.task, "task_folder/tasks.json"), // Implémenter save
+            // 6 => tasks.load_from_file("task_folder/tasks.json"), // Implémenter load
+            7 => break,
+            _ => println!("Invalid option."),
         }
     }
 }

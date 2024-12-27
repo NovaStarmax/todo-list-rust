@@ -1,4 +1,4 @@
-use crate::Status;
+use crate::{todo::ToDo, Status};
 use std::io;
 
 pub fn string_input() -> String {
@@ -31,5 +31,25 @@ pub fn status_input() -> Status {
             println!("Invalid status, defaulting to 'To Do'");
             Status::ToDo
         }
+    }
+}
+
+pub fn create_todo() -> ToDo {
+    let messages = ["What is your task ?", "Give specific information:", "Select the Status:
+            1: To Do
+            2: In Progress
+            3: Done"];
+
+    println!("{}", messages[0]);
+    let title = string_input().trim().to_string();
+    println!("{}", messages[1]);
+    let information = string_input().trim().to_string();
+    println!("{}", messages[2]);
+    let status = status_input();
+
+    ToDo {
+        title: title,
+        information: information,
+        status: status,
     }
 }

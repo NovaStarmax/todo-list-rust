@@ -13,3 +13,13 @@ pub enum Status {
     InProgress,
     Done,
 }
+
+impl ToDo {
+    pub fn new_task(title: String, information: String, status: Status) -> Self {
+        Self {
+            title: title,
+            information: information,
+            status: status,
+        }
+    }
+}
