@@ -1,7 +1,7 @@
 mod input;
+mod json_manager;
 mod task_manager;
 mod todo;
-mod json_manager;
 use crate::input::int_input;
 use task_manager::*;
 use todo::{Status, ToDo};
@@ -38,7 +38,7 @@ fn run(tasks: &mut TaskManager) {
             3 => tasks.delete_task(),
             4 => tasks.modify_task(),
             // 5 => json_manager::save_to_file(&tasks.task, "task_folder/tasks.json"), // Implémenter save
-            // 6 => tasks.load_from_file("task_folder/tasks.json"), // Implémenter load
+            6 => tasks.load_from_file("task_folder/tasks.json"),
             7 => break,
             _ => println!("Invalid option."),
         }

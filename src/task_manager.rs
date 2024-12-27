@@ -1,18 +1,18 @@
-use crate::input::{int_input, status_input, string_input, create_todo};
+use crate::input::{create_todo, int_input, status_input, string_input};
 use crate::ToDo;
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fs;
 
 pub struct TaskManager {
-    pub task: HashMap<i32, ToDo>,
-    pub next_id: i32,
+    pub id: i32,
+    pub task: BTreeMap<i32, ToDo>,
 }
 
 impl TaskManager {
     pub fn new() -> Self {
         Self {
-            task: HashMap::new(),
-            next_id: 0,
+            id: 1,
+            task: BTreeMap::new(),
         }
     }
 
@@ -20,26 +20,31 @@ impl TaskManager {
         self.task.insert(id, task);
     }
 
-    // Ce posser la question si on ajoute les id dans le json car c’est plus simple pour la suite 
+    // Ce posser la question si on ajoute les id dans le json car c’est plus simple pour la suite
 
-    pub fn load_from_file(&mut self, path: &str){
+    pub fn load_from_file(&mut self, path: &str) {
         let data = fs::read_to_string(path).expect("Unable to read file");
         let data_vec: Vec<ToDo> = serde_json::from_str(&data).expect("Failed to deserialize tasks");
-        for task in data_vec {
-            self.task.insert(self.next_id, task);
-            self.next_id += 1;
+        for task in &data_vec {
+            self.add_task_from_json(task);
         }
+        println!("{} Tasks has been added successfully !", data_vec.len());
+    }
+
+    pub fn increase_id(&mut self) {
+        self.id += 1;
     }
 
     pub fn add_task(&mut self) {
-        self.next_id += 1;
-
         let task = create_todo();
-        self.task.insert(
-            self.next_id,
-            task,
-        );
+        self.task.insert(self.id, task);
         println!("Hash : {:?}", self.task);
+        self.increase_id();
+    }
+
+    pub fn add_task_from_json(&mut self, task: &ToDo) {
+        self.task.insert(self.id, task.clone());
+        self.increase_id();
     }
 
     pub fn list_task(&self) {

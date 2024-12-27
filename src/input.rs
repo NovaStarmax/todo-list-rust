@@ -35,21 +35,25 @@ pub fn status_input() -> Status {
 }
 
 pub fn create_todo() -> ToDo {
-    let messages = ["What is your task ?", "Give specific information:", "Select the Status:
+    let instruction = [
+        "What is your task ?",
+        "Give specific information:",
+        "Select the Status:
             1: To Do
             2: In Progress
-            3: Done"];
+            3: Done",
+    ];
 
-    println!("{}", messages[0]);
+    println!("{}", instruction[0]);
     let title = string_input().trim().to_string();
-    println!("{}", messages[1]);
+    println!("{}", instruction[1]);
     let information = string_input().trim().to_string();
-    println!("{}", messages[2]);
+    println!("{}", instruction[2]);
     let status = status_input();
 
     ToDo {
-        title: title,
-        information: information,
-        status: status,
+        title,
+        information,
+        status,
     }
 }
