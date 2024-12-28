@@ -20,17 +20,6 @@ impl TaskManager {
         self.task.insert(id, task);
     }
 
-    // Ce posser la question si on ajoute les id dans le json car c’est plus simple pour la suite
-
-    pub fn load_from_file(&mut self, path: &str) {
-        let data = fs::read_to_string(path).expect("Unable to read file");
-        let data_vec: Vec<ToDo> = serde_json::from_str(&data).expect("Failed to deserialize tasks");
-        for task in &data_vec {
-            self.add_task_from_json(task);
-        }
-        println!("{} Tasks has been added successfully !", data_vec.len());
-    }
-
     pub fn increase_id(&mut self) {
         self.id += 1;
     }
@@ -39,11 +28,6 @@ impl TaskManager {
         let task = create_todo();
         self.task.insert(self.id, task);
         println!("Hash : {:?}", self.task);
-        self.increase_id();
-    }
-
-    pub fn add_task_from_json(&mut self, task: &ToDo) {
-        self.task.insert(self.id, task.clone());
         self.increase_id();
     }
 
@@ -92,7 +76,7 @@ impl TaskManager {
 
         println!(
             "
-        1 : Modify title
+            1 : Modify title
         2 : Modify information
         3 : Modify status
         "
@@ -124,5 +108,19 @@ impl TaskManager {
             }
             _ => {}
         };
+    }
+
+    pub fn load_from_file(&mut self, path: &str) {
+        let data = fs::read_to_string(path).expect("Unable to read file");
+        let data_vec: Vec<ToDo> = serde_json::from_str(&data).expect("Failed to deserialize tasks");
+        for task in &data_vec {
+            self.add_task_from_json(task);
+        }
+        println!("{} Tasks has been added successfully !", data_vec.len());
+    }
+
+    pub fn add_task_from_json(&mut self, task: &ToDo) {
+        self.task.insert(self.id, task.clone());
+        self.increase_id();
     }
 }
