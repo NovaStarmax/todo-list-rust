@@ -9,14 +9,6 @@ use utility::get_json;
 
 fn main() {
     let mut tasks = TaskManager::new();
-    tasks.insert(
-        10,
-        ToDo {
-            title: "Ma tache".to_string(),
-            information: "Mon information".to_string(),
-            status: Status::ToDo,
-        },
-    );
     run(&mut tasks);
 }
 
@@ -30,9 +22,7 @@ fn run(tasks: &mut TaskManager) {
             2. List tasks
             3. Delete task
             4. Modify task
-            5. Save tasks to JSON
-            6. Load tasks from JSON
-            7. Quit"
+            5. Quit and Save"
         );
         let action = int_input();
         match action {
@@ -40,9 +30,10 @@ fn run(tasks: &mut TaskManager) {
             2 => tasks.list_task(),
             3 => tasks.delete_task(),
             4 => tasks.modify_task(),
-            // 5 => json_manager::save_to_file(&tasks.task, "tasks.json"), // Implémenter save
-            6 => tasks.load_from_file(&path),
-            7 => break,
+            5 => {
+                tasks.save_to_file(&path);
+                break;
+            }
             _ => println!("Invalid option."),
         }
     }

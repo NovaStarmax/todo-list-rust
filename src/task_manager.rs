@@ -1,5 +1,8 @@
 use crate::input::{create_todo, int_input, status_input, string_input};
+use crate::utility::empty_json;
 use crate::ToDo;
+use serde::Serialize;
+use serde_json::to_string;
 use std::collections::BTreeMap;
 use std::fs;
 
@@ -76,7 +79,7 @@ impl TaskManager {
 
         println!(
             "
-            1 : Modify title
+        1 : Modify title
         2 : Modify information
         3 : Modify status
         "
@@ -111,16 +114,35 @@ impl TaskManager {
     }
 
     pub fn load_from_file(&mut self, path: &str) {
-        let data = fs::read_to_string(path).expect("Unable to read file");
-        let data_vec: Vec<ToDo> = serde_json::from_str(&data).expect("Failed to deserialize tasks");
-        for task in &data_vec {
-            self.add_task_from_json(task);
+        let data = fs::read_to_string(path);
+        match data {
+            Ok(content) => match serde_json::from_str::<Vec<ToDo>>(&content) {
+                Ok(tasks) => {
+                    for task in tasks {
+                        self.add_task_from_json(&task);
+                    }
+                    println!("Tasks successfully loaded from {}", path);
+                }
+                Err(err) => {
+                    println!("Invalid JSON format : {}. Clearing file …", err);
+                    empty_json(path);
+                }
+            },
+            Err(_) => {
+                println!("File not found or unreadable: {}", path);
+            }
         }
-        println!("{} Tasks has been added successfully !", data_vec.len());
     }
 
     pub fn add_task_from_json(&mut self, task: &ToDo) {
         self.task.insert(self.id, task.clone());
         self.increase_id();
+    }
+
+    pub fn save_to_file(&mut self, path: &str) {
+        empty_json(path);
+        let vec_todo: Vec<ToDo> = self.task.values().cloned().collect();
+        let json = serde_json::to_string(&vec_todo).expect("Unable to write to file");
+        fs::write(path, json).expect("Unable to write to file");
     }
 }
