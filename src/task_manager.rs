@@ -1,8 +1,6 @@
 use crate::input::{create_todo, int_input, status_input, string_input};
 use crate::utility::empty_json;
 use crate::ToDo;
-use serde::Serialize;
-use serde_json::to_string;
 use std::collections::BTreeMap;
 use std::fs;
 
@@ -19,10 +17,6 @@ impl TaskManager {
         }
     }
 
-    pub fn insert(&mut self, id: i32, task: ToDo) {
-        self.task.insert(id, task);
-    }
-
     pub fn increase_id(&mut self) {
         self.id += 1;
     }
@@ -30,7 +24,6 @@ impl TaskManager {
     pub fn add_task(&mut self) {
         let task = create_todo();
         self.task.insert(self.id, task);
-        println!("Hash : {:?}", self.task);
         self.increase_id();
     }
 
